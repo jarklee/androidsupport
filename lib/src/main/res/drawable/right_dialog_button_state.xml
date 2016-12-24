@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ /*******************************************************************************
+  ~ * Copyright Ⓒ 2016. TrinhQuan. All right reserved
+  ~ * Author: TrinhQuan. Created on 2016/12/20
+  ~ * Contact: trinhquan.171093@gmail.com
+  ~ ********************************************************************************/
+  -->
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape>
+            <solid android:color="@color/pressed_color"/>
+            <corners android:bottomLeftRadius="0dp" android:bottomRightRadius="2dp" android:topLeftRadius="0dp" android:topRightRadius="0dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <solid android:color="@color/unpressed_color"/>
+            <corners android:bottomLeftRadius="0dp" android:bottomRightRadius="2dp" android:topLeftRadius="0dp" android:topRightRadius="0dp"/>
+        </shape>
+    </item>
+</selector>

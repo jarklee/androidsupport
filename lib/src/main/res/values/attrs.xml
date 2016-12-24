@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ /*******************************************************************************
+  ~ * Copyright Ⓒ 2016. TrinhQuan. All right reserved
+  ~ * Author: TrinhQuan. Created on 2016/12/20
+  ~ * Contact: trinhquan.171093@gmail.com
+  ~ ********************************************************************************/
+  -->
+
+<resources>
+    <declare-styleable name="Jarklee_RoundCornerLayout">
+        <attr name="RoundCornerLayout_radius" format="dimension"/>
+    </declare-styleable>
+    <declare-styleable name="Jarklee_FontChangeable">
+        <attr name="FontChangeable_custom_font" format="string"/>
+    </declare-styleable>
+
+    <declare-styleable name="Jarklee_AspectRatioView">
+        <attr name="AspectRatioView_aspectRatioEnabled" format="boolean"/>
+        <attr name="AspectRatioView_dominantMeasurement" format="enum">
+            <enum name="Width" value="0"/>
+            <enum name="Height" value="1"/>
+        </attr>
+        <attr name="AspectRatioView_aspectRatio" format="float"/>
+    </declare-styleable>
+
+</resources>
