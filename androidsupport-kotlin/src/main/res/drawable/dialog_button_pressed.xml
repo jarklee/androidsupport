@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ /*******************************************************************************
+  ~ * Copyright Ⓒ 2016. TrinhQuan. All right reserved
+  ~ * Author: TrinhQuan. Created on 2016/12/20
+  ~ * Contact: trinhquan.171093@gmail.com
+  ~ ********************************************************************************/
+  -->
+
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/pressed_color"/>
+    <corners
+        android:bottomLeftRadius="2dp"
+        android:bottomRightRadius="3dp"
+        android:topLeftRadius="0dp"
+        android:topRightRadius="0dp"/>
+</shape>

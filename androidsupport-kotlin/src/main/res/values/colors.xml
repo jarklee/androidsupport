@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ /*******************************************************************************
+  ~ * Copyright Ⓒ 2016. TrinhQuan. All right reserved
+  ~ * Author: TrinhQuan. Created on 2016/12/20
+  ~ * Contact: trinhquan.171093@gmail.com
+  ~ ********************************************************************************/
+  -->
+
+<resources>
+    <color name="colorPrimaryLight">#ff8bb7e0</color>
+    <color name="colorPrimary">#ff6195c5</color>
+    <color name="colorPrimaryDark">#5087ba</color>
+    <color name="colorAccent">#ff0000</color>
+    <color name="colorAccentDark">#be0000</color>
+    <color name="white_color">#fff</color>
+
+    <color name="rippelColorPrimary">#808bb7e0</color>
+    <color name="circleColorPrimary">#408bb7e0</color>
+
+    <color name="category_selected">#dcf3ff</color>
+    <color name="primary_shader">#b1ddf4</color>
+    <color name="background_color">#ffdce6f0</color>
+
+    <color name="special_color">#003865</color>
+
+    <color name="stroke_color">#aaa</color>
+    <color name="pressed_color">#cacaca</color>
+    <color name="unpressed_color">#f2f2f2</color>
+
+    <color name="black_color">#000</color>
+
+    <color name="opacity_black_color">#66000000</color>
+    <color name="opacity_white_color">#eeffffff</color>
+
+    <color name="light_text_color">#FFFFFF</color>
+    <color name="light_secondary_text_color">#89ffffff</color>
+    <color name="light_disable_color">#60ffffff</color>
+    <color name="light_divider_color">#1effffff</color>
+    <color name="light_primary_text_color">#FFFFFF</color>
+    <color name="light_accent_text_color">#FFFFFF</color>
+
+    <color name="dark_text_color">#000</color>
+    <color name="dark_secondary_text_color">#474747</color>
+    <color name="dark_disable_color">#a4a4a4</color>
+    <color name="dark_divider_color">#cfcfcf</color>
+    <color name="dark_primary_text_color">#000</color>
+    <color name="dark_accent_text_color">#000</color>
+    <color name="selectedTabColor">#fff</color>
+
+</resources>
