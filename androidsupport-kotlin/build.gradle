@@ -1,4 +1,15 @@
+/*
+ * ******************************************************************************
+ *  Copyright Ⓒ 2016. Dotohsoft.com. All right reserved
+ *  Author TrinhQuan. Create on 2016/12/24
+ * ******************************************************************************
+ */
+
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'com.github.dcendents.android-maven'
+
+group='com.github.jarklee'
 
 android {
     compileSdkVersion 24
@@ -11,7 +22,6 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
     }
     buildTypes {
         release {
@@ -19,13 +29,38 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    lintOptions{
+        abortOnError false
+    }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
     compile 'com.android.support:appcompat-v7:24.2.1'
-    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:recyclerview-v7:24.2.1'
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    failOnError  false
+    source = android.sourceSets.main.java.sourceFiles
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.getDestinationDir()
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
 }
