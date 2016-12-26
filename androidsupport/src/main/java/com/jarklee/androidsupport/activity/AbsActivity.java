@@ -32,23 +32,15 @@ import com.jarklee.essential.common.helper.PermissionHelper;
 public abstract class AbsActivity extends AppCompatActivity {
 
     @CheckResult
-    protected final ServiceConnector bindToService(Class<? extends Service> serviceClass,
-                                                   @BindServiceFlag int flags) {
-        return bindToService(serviceClass, null, flags);
+    protected final ServiceConnector bindToService(Class<? extends Service> serviceClass) {
+        return bindToService(serviceClass, Context.BIND_AUTO_CREATE);
     }
 
     @CheckResult
     protected final ServiceConnector bindToService(Class<? extends Service> serviceClass,
-                                                   ServiceConnector.ServiceConnectorDelegate connection) {
-        return bindToService(serviceClass, connection, Context.BIND_AUTO_CREATE);
-    }
-
-    @CheckResult
-    protected final ServiceConnector bindToService(Class<? extends Service> serviceClass,
-                                                   ServiceConnector.ServiceConnectorDelegate connection,
                                                    @BindServiceFlag int flags) {
-        ServiceConnector serviceConnector = new ServiceConnector(this, serviceClass, flags);
-        serviceConnector.bindService(connection);
+        ServiceConnector serviceConnector = new ServiceConnector(this, flags);
+        serviceConnector.bindService(serviceClass);
         return serviceConnector;
     }
 
@@ -87,9 +79,9 @@ public abstract class AbsActivity extends AppCompatActivity {
     }
 
     protected final void navigateToActivityForResult(Class<? extends Activity> activity,
-                                               @Nullable Bundle data,
-                                               int requestCode,
-                                               int flags) {
+                                                     @Nullable Bundle data,
+                                                     int requestCode,
+                                                     int flags) {
         Intent intent = new Intent(this, activity);
         intent.addFlags(flags);
         if (data != null) {

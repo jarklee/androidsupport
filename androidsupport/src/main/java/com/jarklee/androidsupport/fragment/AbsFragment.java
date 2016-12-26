@@ -30,23 +30,15 @@ import com.jarklee.essential.annotation.BindServiceFlag;
 public abstract class AbsFragment extends Fragment {
 
     @CheckResult
-    protected final ServiceConnector bindToService(Class<? extends Service> serviceClass,
-                                                   @BindServiceFlag int flags) {
-        return bindToService(serviceClass, null, flags);
+    protected final ServiceConnector bindToService(Class<? extends Service> serviceClass) {
+        return bindToService(serviceClass, Context.BIND_AUTO_CREATE);
     }
 
     @CheckResult
     protected final ServiceConnector bindToService(Class<? extends Service> serviceClass,
-                                                   ServiceConnector.ServiceConnectorDelegate connection) {
-        return bindToService(serviceClass, connection, Context.BIND_AUTO_CREATE);
-    }
-
-    @CheckResult
-    protected final ServiceConnector bindToService(Class<? extends Service> serviceClass,
-                                                   ServiceConnector.ServiceConnectorDelegate connection,
                                                    @BindServiceFlag int flags) {
-        ServiceConnector serviceConnector = new ServiceConnector(getContext(), serviceClass, flags);
-        serviceConnector.bindService(connection);
+        ServiceConnector serviceConnector = new ServiceConnector(getContext(), flags);
+        serviceConnector.bindService(serviceClass);
         return serviceConnector;
     }
 

@@ -13,8 +13,6 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import com.jarklee.androidsupport.callback.LifeCycleListener
-import com.jarklee.androidsupport.lifecycle.LifeCycleCollection
-import com.jarklee.androidsupport.lifecycle.LifeCycleHook
 
 class HeadlessFragmentCompat : Fragment(), LifeCycleHook {
 

@@ -25,22 +25,19 @@ import java.util.concurrent.locks.ReentrantLock;
 public class ServiceConnector implements ServiceConnection {
 
     private Messenger messenger;
-    private ServiceConnectorDelegate connectionCallback;
     private final List<IServiceTask> pendingTasks;
     private final Context context;
-    private final Class<? extends Service> serviceClass;
     private final int flag;
     private final Lock pendingTasksLock = new ReentrantLock();
 
-    public ServiceConnector(Context context, Class<? extends Service> serviceClass) {
-        this(context, serviceClass, Context.BIND_AUTO_CREATE);
+    public ServiceConnector(Context context) {
+        this(context, Context.BIND_AUTO_CREATE);
     }
 
-    public ServiceConnector(Context context, Class<? extends Service> serviceClass,
+    public ServiceConnector(Context context,
                             @BindServiceFlag int flag) {
         pendingTasks = new Vector<>();
         this.context = context;
-        this.serviceClass = serviceClass;
         this.flag = flag;
     }
 
@@ -53,16 +50,10 @@ public class ServiceConnector implements ServiceConnection {
         } finally {
             pendingTasksLock.unlock();
         }
-        if (connectionCallback != null) {
-            connectionCallback.onMessageServiceReady(name, service);
-        }
     }
 
     @Override
     public final void onServiceDisconnected(ComponentName name) {
-        if (connectionCallback != null) {
-            connectionCallback.onMessageServiceTerminal(name);
-        }
         pendingTasksLock.lock();
         try {
             messenger = null;
@@ -72,12 +63,7 @@ public class ServiceConnector implements ServiceConnection {
         }
     }
 
-    public final void bindService() {
-        bindService(null);
-    }
-
-    public final void bindService(ServiceConnectorDelegate connectionCallback) {
-        this.connectionCallback = connectionCallback;
+    public final void bindService(Class<? extends Service> serviceClass) {
         ServiceHelper.bindToService(getContext(), serviceClass, this, flag);
     }
 
@@ -133,11 +119,5 @@ public class ServiceConnector implements ServiceConnection {
         } finally {
             pendingTasksLock.unlock();
         }
-    }
-
-    public interface ServiceConnectorDelegate {
-        void onMessageServiceReady(ComponentName name, IBinder service);
-
-        void onMessageServiceTerminal(ComponentName name);
     }
 }

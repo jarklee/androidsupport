@@ -12,10 +12,7 @@ import android.annotation.TargetApi
 import android.app.Activity
 import android.os.Build
 import android.support.v4.app.FragmentActivity
-
 import com.jarklee.androidsupport.callback.LifeCycleListener
-import com.jarklee.androidsupport.lifecycle.HeadlessFragment
-import com.jarklee.androidsupport.lifecycle.HeadlessFragmentCompat
 
 object LifeCycleHelper {
 

@@ -16,34 +16,38 @@ import android.os.IBinder
 import android.os.Messenger
 import com.jarklee.androidsupport.annotation.BindServiceFlag
 import com.jarklee.androidsupport.ext.bindToService
-import com.jarklee.androidsupport.service.IServiceTask
 import java.util.*
+import java.util.concurrent.locks.ReentrantLock
 
 class ServiceConnector constructor(private val context: Context,
                                    @BindServiceFlag private val flag: Int = Context.BIND_AUTO_CREATE)
-: ServiceConnection {
+    : ServiceConnection {
 
     private var messenger: Messenger? = null
-    private val pendingTasks: MutableList<IServiceTask>
+    private var pendingTasks: MutableList<IServiceTask>
+    private val pendingTasksLock = ReentrantLock()
 
     init {
         pendingTasks = Vector<IServiceTask>()
     }
 
     override fun onServiceConnected(name: ComponentName, service: IBinder) {
-        messenger = Messenger(service)
-        synchronized(pendingTasks) {
-            for (pendingTask in pendingTasks) {
-                pendingTask.execute(messenger!!)
-            }
-            pendingTasks.clear()
+        pendingTasksLock.lock()
+        try {
+            messenger = Messenger(service)
+            performPendingTasks()
+        } finally {
+            pendingTasksLock.unlock()
         }
     }
 
     override fun onServiceDisconnected(name: ComponentName) {
-        messenger = null
-        synchronized(pendingTasks) {
+        pendingTasksLock.lock()
+        try {
+            messenger = null
             pendingTasks.clear()
+        } finally {
+            pendingTasksLock.unlock()
         }
     }
 
@@ -52,24 +56,53 @@ class ServiceConnector constructor(private val context: Context,
     }
 
     fun unbindService() {
-        context.unbindService(this)
+        getContext().unbindService(this)
+    }
+
+    private fun getContext(): Context {
+        return context
     }
 
     fun enqueueTask(task: IServiceTask?) {
-        if (task != null) {
-            if (messenger != null) {
-                task.execute(messenger!!)
-            } else {
-                synchronized(pendingTasks) {
-                    pendingTasks.add(task)
-                }
+        if (task == null) {
+            return
+        }
+        val messenger = this.messenger
+        if (null != messenger) {
+            task.execute(messenger)
+        } else {
+            pendingTasksLock.lock()
+            try {
+                pendingTasks.add(task)
+                performPendingTasks()
+            } finally {
+                pendingTasksLock.unlock()
             }
         }
     }
 
-    fun removeTask(task: IServiceTask) {
-        synchronized(pendingTasks) {
+    fun removeTask(task: IServiceTask?) {
+        if (task == null) {
+            return
+        }
+        pendingTasksLock.lock()
+        try {
             pendingTasks.remove(task)
+        } finally {
+            pendingTasksLock.unlock()
+        }
+    }
+
+    private fun performPendingTasks() {
+        val messenger = this.messenger ?: return
+        pendingTasksLock.lock()
+        try {
+            for (pendingTask in pendingTasks) {
+                pendingTask.execute(messenger)
+            }
+            pendingTasks.clear()
+        } finally {
+            pendingTasksLock.unlock()
         }
     }
 }
