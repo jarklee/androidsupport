@@ -35,7 +35,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:recyclerview-v7:24.2.1'
-    compile 'com.github.jarklee:essential:1.0.1'
+    compile 'com.github.jarklee:essential:1.0.3'
 }
 
 task sourcesJar(type: Jar) {
