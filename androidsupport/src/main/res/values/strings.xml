@@ -1,11 +1,13 @@
 <!--
   ~ /*******************************************************************************
-  ~ * Copyright Ⓒ 2016. TrinhQuan. All right reserved
-  ~ * Author: TrinhQuan. Created on 2016/12/20
+  ~ * Copyright Ⓒ 2017. TrinhQuan. All right reserved
+  ~ * Author: TrinhQuan. Created on 2017/1/6
   ~ * Contact: trinhquan.171093@gmail.com
   ~ ********************************************************************************/
   -->
 
 <resources>
     <string name="app_name">Libs</string>
+    <string name="button_accept">Accept</string>
+    <string name="button_cancel">Cancel</string>
 </resources>

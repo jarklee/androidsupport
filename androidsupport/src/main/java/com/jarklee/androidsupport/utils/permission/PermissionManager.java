@@ -1,7 +1,8 @@
 /*
  * ******************************************************************************
- *  Copyright Ⓒ 2017. Dotohsoft.com. All right reserved
- *  Author TrinhQuan. Create on 2017/1/6
+ *  Copyright Ⓒ 2017. TrinhQuan. All right reserved
+ *  Author: TrinhQuan. Created on 2017/1/6
+ *  Contact: trinhquan.171093@gmail.com
  * ******************************************************************************
  */
 
@@ -9,12 +10,16 @@ package com.jarklee.androidsupport.utils.permission;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.v7.app.AlertDialog;
 
+import com.jarklee.androidsupport.R;
 import com.jarklee.essential.common.helper.PermissionHelper;
+import com.jarklee.essential.common.helper.StringHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,49 +31,50 @@ public final class PermissionManager {
 
     private final IPermissionRequester mPermissionRequester;
 
-    public PermissionManager(Activity activity) {
+    public PermissionManager(@NonNull Activity activity) {
         this(getPermissionRequester(activity), null);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
-    public PermissionManager(android.app.Fragment fragment) {
+    public PermissionManager(@NonNull android.app.Fragment fragment) {
         this(getPermissionRequester(fragment), null);
     }
 
-    public PermissionManager(android.support.v4.app.Fragment fragment) {
+    public PermissionManager(@NonNull android.support.v4.app.Fragment fragment) {
         this(getPermissionRequester(fragment), null);
     }
 
-    public PermissionManager(Context context) {
+    public PermissionManager(@NonNull Context context) {
         this(getPermissionRequester(context), null);
     }
 
-    public PermissionManager(Activity activity,
-                             Runnable defaultCancelAction) {
+    public PermissionManager(@NonNull Activity activity,
+                             @Nullable Runnable defaultCancelAction) {
         this(getPermissionRequester(activity), defaultCancelAction);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
-    public PermissionManager(android.app.Fragment fragment,
-                             Runnable defaultCancelAction) {
+    public PermissionManager(@NonNull android.app.Fragment fragment,
+                             @Nullable Runnable defaultCancelAction) {
         this(getPermissionRequester(fragment), defaultCancelAction);
     }
 
-    public PermissionManager(android.support.v4.app.Fragment fragment,
-                             Runnable defaultCancelAction) {
+    public PermissionManager(@NonNull android.support.v4.app.Fragment fragment,
+                             @Nullable Runnable defaultCancelAction) {
         this(getPermissionRequester(fragment), defaultCancelAction);
     }
 
-    public PermissionManager(Context context,
-                             Runnable defaultCancelAction) {
+    public PermissionManager(@NonNull Context context,
+                             @Nullable Runnable defaultCancelAction) {
         this(getPermissionRequester(context), defaultCancelAction);
     }
 
-    public PermissionManager(IPermissionRequester mPermissionRequester) {
+    public PermissionManager(@NonNull IPermissionRequester mPermissionRequester) {
         this(mPermissionRequester, null);
     }
 
-    public PermissionManager(IPermissionRequester permissionRequester, Runnable defaultCancelAction) {
+    public PermissionManager(@NonNull IPermissionRequester permissionRequester,
+                             @Nullable Runnable defaultCancelAction) {
         this.mDefaultCancelAction = defaultCancelAction;
         this.mPermissionRequests = new HashMap<>();
         this.mPermissionRequester = permissionRequester;
@@ -89,26 +95,30 @@ public final class PermissionManager {
     }
 
     public final void executeAction(@NonNull final Runnable action,
+                                    @Nullable final String explainMessage,
                                     final String... requirePermissions) {
-        executeAction(action, false, requirePermissions);
+        executeAction(action, false, explainMessage, requirePermissions);
     }
 
     public final void executeAction(@NonNull final Runnable action,
                                     final boolean useDefaultCancelAction,
+                                    @Nullable final String explainMessage,
                                     final String... requirePermissions) {
         executeAction(action, useDefaultCancelAction ? mDefaultCancelAction : null,
-                requirePermissions);
+                explainMessage, requirePermissions);
     }
 
     public final void executeAction(@NonNull final Runnable action,
                                     @Nullable final Runnable cancelAction,
+                                    @Nullable final String explainMessage,
                                     final String... requirePermissions) {
-        executeAction(action, cancelAction, false, requirePermissions);
+        executeAction(action, cancelAction, false, explainMessage, requirePermissions);
     }
 
     public final void executeAction(@NonNull final Runnable action,
                                     @Nullable final Runnable cancelAction,
                                     final boolean useDefaultCancelAction,
+                                    @Nullable final String explainMessage,
                                     final String... requirePermissions) {
         IPermissionRequester permissionRequester = this.mPermissionRequester;
         if (permissionRequester.hasPermissions(requirePermissions)) {
@@ -126,6 +136,15 @@ public final class PermissionManager {
         final int requestId = action.hashCode();
         final PermissionRequest request = new PermissionRequest(action,
                 cancelAction == null ? useDefaultCancelAction ? mDefaultCancelAction : null : cancelAction);
+        if (permissionRequester.shouldShowExplainMessage()
+                && !StringHelper.isEmpty(explainMessage)) {
+            permissionRequester.showExplainMessage(this,
+                    explainMessage,
+                    requestId,
+                    request,
+                    requirePermissions);
+            return;
+        }
         mPermissionRequests.put(requestId, request);
         permissionRequester.requestPermissions(requestId, requirePermissions);
     }
@@ -153,6 +172,14 @@ public final class PermissionManager {
         boolean hasPermissions(String[] requirePermissions);
 
         boolean shouldRequestPermissions();
+
+        boolean shouldShowExplainMessage(String... requirePermissions);
+
+        void showExplainMessage(PermissionManager permissionManager,
+                                String explainMessage,
+                                int requestId,
+                                PermissionRequest request,
+                                String... requirePermissions);
     }
 
     private static final class PermissionRequesterImpl implements IPermissionRequester {
@@ -217,15 +244,74 @@ public final class PermissionManager {
             if (fragment2 != null) {
                 return PermissionHelper.has(fragment2, requirePermissions);
             }
-            if (context != null) {
-                return PermissionHelper.has(context, requirePermissions);
-            }
-            return false;
+            return context != null && PermissionHelper.has(context, requirePermissions);
         }
 
         @Override
         public boolean shouldRequestPermissions() {
             return activity != null || fragment1 != null || fragment2 != null;
+        }
+
+        @Override
+        public boolean shouldShowExplainMessage(String... requirePermissions) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                return false;
+            }
+            Activity activity = this.activity;
+            if (activity == null && fragment1 != null) {
+                activity = fragment1.getActivity();
+            }
+            if (activity == null && fragment2 != null) {
+                activity = fragment2.getActivity();
+            }
+            if (activity == null) {
+                return false;
+            }
+            for (String requirePermission : requirePermissions) {
+                if (activity.shouldShowRequestPermissionRationale(requirePermission)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public void showExplainMessage(final PermissionManager manager,
+                                       final String explainMessage,
+                                       final int requestId,
+                                       final PermissionRequest request,
+                                       final String... requirePermissions) {
+            new AlertDialog.Builder(getContext())
+                    .setMessage(explainMessage)
+                    .setPositiveButton(R.string.button_accept, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            manager.mPermissionRequests.put(requestId, request);
+                            requestPermissions(requestId, requirePermissions);
+                        }
+                    })
+                    .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            request.executeCancel();
+                        }
+                    })
+                    .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialog) {
+                            request.executeCancel();
+                        }
+                    }).show();
+        }
+
+        private Context getContext() {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                return activity == null ? fragment1 == null
+                        ? fragment2.getContext()
+                        : fragment1.getActivity() : activity;
+            }
+            return activity == null ? fragment2.getContext()
+                    : activity;
         }
     }
 
