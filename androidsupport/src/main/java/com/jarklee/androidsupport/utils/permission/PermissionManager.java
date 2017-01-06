@@ -166,7 +166,7 @@ public final class PermissionManager {
         return new PermissionRequesterImpl(context);
     }
 
-    private interface IPermissionRequester {
+    interface IPermissionRequester {
         void requestPermissions(int requestId, String... permissions);
 
         boolean hasPermissions(String[] requirePermissions);
