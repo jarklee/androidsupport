@@ -315,24 +315,24 @@ public final class PermissionManager {
         }
     }
 
-    private static final class PermissionRequest {
+    public static final class PermissionRequest {
 
         private final Runnable actionOnGranted;
         private final Runnable actionOnCanceled;
 
-        public PermissionRequest(final Runnable actionOnGranted,
-                                 final Runnable actionOnCanceled) {
+        private PermissionRequest(final Runnable actionOnGranted,
+                                  final Runnable actionOnCanceled) {
             this.actionOnGranted = actionOnGranted;
             this.actionOnCanceled = actionOnCanceled;
         }
 
-        void executeAction() {
+        public void executeAction() {
             if (actionOnGranted != null) {
                 actionOnGranted.run();
             }
         }
 
-        void executeCancel() {
+        public void executeCancel() {
             if (actionOnCanceled != null) {
                 actionOnCanceled.run();
             }

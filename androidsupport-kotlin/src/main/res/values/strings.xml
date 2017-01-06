@@ -8,4 +8,6 @@
 
 <resources>
     <string name="app_name">Libs</string>
+    <string name="button_accept">Accept</string>
+    <string name="button_cancel">Cancel</string>
 </resources>
