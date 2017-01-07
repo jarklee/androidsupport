@@ -27,3 +27,32 @@ fun Context.getAppFolder(): File {
     }
     return appFolder
 }
+
+fun Context.randomTempFile(): File {
+    val cacheDir = getCachedFolder()
+    var randomFileName = String.format("temp_file_%s.tmp", StringHelper.randomString("temp_file"))
+    var tempFile = File(cacheDir, randomFileName)
+    while (tempFile.exists()) {
+        randomFileName = String.format("temp_file_%s.tmp", StringHelper.randomString("temp_file"))
+        tempFile = File(cacheDir, randomFileName)
+    }
+    return tempFile
+}
+
+fun Context.tempFile(tempFileInvoke: (tempFile: File) -> Unit) {
+    val tempFile = this.randomTempFile()
+    try {
+        tempFileInvoke(tempFile)
+    } finally {
+        tempFile.delete()
+    }
+}
+
+fun <T> Context.tempFile(tempFileInvoke: (tempFile: File) -> T): T {
+    val tempFile = this.randomTempFile()
+    try {
+        return tempFileInvoke(tempFile)
+    } finally {
+        tempFile.delete()
+    }
+}

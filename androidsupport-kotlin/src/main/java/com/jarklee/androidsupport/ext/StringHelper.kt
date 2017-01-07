@@ -8,6 +8,12 @@
 
 package com.jarklee.androidsupport.ext
 
+import android.util.Base64
+import java.math.BigInteger
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
+import java.util.*
+
 object StringHelper {
 
     fun join(joiner: String,
@@ -22,7 +28,20 @@ object StringHelper {
     }
 
     fun isEmpty(s: String?): Boolean {
-        return s == null || s.length == 0
+        return s == null || s.isEmpty()
+    }
+
+    private val random = Random(System.currentTimeMillis())
+
+    fun randomString(seedString: String): String {
+        val resultString = seedString + System.currentTimeMillis() + random.nextInt()
+        try {
+            val md5 = MessageDigest.getInstance("MD5")
+            md5.update(resultString.toByteArray(), 0, resultString.length)
+            return BigInteger(1, md5.digest()).toString(16)
+        } catch (e: NoSuchAlgorithmException) {
+            return Base64.encodeToString(resultString.toByteArray(), Base64.URL_SAFE)
+        }
     }
 
     private class Joiner internal constructor(private val joiner: Any) {
