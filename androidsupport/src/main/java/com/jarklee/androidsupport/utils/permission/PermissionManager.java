@@ -10,7 +10,6 @@ package com.jarklee.androidsupport.utils.permission;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -91,26 +90,12 @@ public final class PermissionManager {
                 permissionRequest.executeCancel();
             }
         } else {
-            if (isOneGranted(grantResults)) {
+            if (PermissionHelper.isOneGranted(grantResults)) {
                 permissionRequest.executeAction();
             } else {
                 permissionRequest.executeCancel();
             }
         }
-    }
-
-    private boolean isOneGranted(int[] grantedResults) {
-        if (grantedResults == null) {
-            return true;
-        }
-        boolean granted = false;
-        for (int grantedResult : grantedResults) {
-            if (grantedResult == PackageManager.PERMISSION_GRANTED) {
-                granted = true;
-                break;
-            }
-        }
-        return granted;
     }
 
     public PermissionsRequestQuery requireAll() {
