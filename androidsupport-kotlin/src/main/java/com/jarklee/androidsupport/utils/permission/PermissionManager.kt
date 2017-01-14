@@ -121,6 +121,17 @@ class PermissionManager private constructor(internal val permissionRequester: IP
                                       request: PermissionRequest) {
         mPermissionRequests.put(requestId, request)
     }
+
+    internal fun obtainRequestId(any: Any?): Int {
+        var hash = (any?.hashCode() ?: 0) and 0xffff
+        while (mPermissionRequests.containsKey(hash)) {
+            hash++
+            if (hash >= 0xffff) {
+                hash = 0
+            }
+        }
+        return hash
+    }
 }
 
 

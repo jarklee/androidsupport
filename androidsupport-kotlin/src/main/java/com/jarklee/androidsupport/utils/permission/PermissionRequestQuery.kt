@@ -119,7 +119,7 @@ internal abstract class PermissionsRequestBaseQuery(val mRequestManager: Permiss
             canceler = mRequestManager.defaultCancelAction
         }
         val request = PermissionRequest.newRequest(action, canceler, mIsRequireAll)
-        val requestId = action?.hashCode() ?: request.hashCode()
+        val requestId = mRequestManager.obtainRequestId(action ?: request)
         if (permissionRequester.shouldShowExplainMessage() && !StringHelper.isEmpty(explainMessage)) {
             permissionRequester.showExplainMessage(mRequestManager,
                     explainMessage!!,
@@ -158,7 +158,7 @@ internal abstract class PermissionsRequestBaseQuery(val mRequestManager: Permiss
             canceler = mRequestManager.defaultCancelAction
         }
         val request = PermissionRequest.newCancelOnly(canceler, mIsRequireAll)
-        val requestId = cancelAction?.hashCode() ?: request.hashCode()
+        val requestId = mRequestManager.obtainRequestId(cancelAction ?: request)
         if (permissionRequester.shouldShowExplainMessage()
                 && !StringHelper.isEmpty(explainMessage)) {
             permissionRequester.showExplainMessage(mRequestManager,
