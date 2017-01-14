@@ -14,8 +14,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.support.annotation.RequiresApi
 import android.support.v4.app.ActivityCompat
-import com.jarklee.androidsupport.ext.permission.*
-import java.util.*
 
 fun Context.hasPermissions(vararg permission: String): Boolean {
     return PermissionHelper.has(this, *permission)
