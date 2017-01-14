@@ -13,7 +13,10 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
-class PermissionRequesterFactory {
+final class PermissionRequesterFactory {
+
+    private PermissionRequesterFactory() {
+    }
 
     static IPermissionRequester create(Activity activity) {
         return new PermissionRequesterImpl(activity);
