@@ -142,4 +142,15 @@ public final class PermissionManager {
     Runnable getDefaultCancelAction() {
         return mDefaultCancelAction;
     }
+
+    int obtainRequestId(Object o) {
+        int hash = (o == null ? 0 : o.hashCode()) & 0xffff;
+        while (mPermissionRequests.containsKey(hash)) {
+            hash++;
+            if (hash >= 0xffff) {
+                hash = 0;
+            }
+        }
+        return hash;
+    }
 }
