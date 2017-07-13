@@ -8,12 +8,13 @@
 package com.jarklee.androidsupport.adapter
 
 import android.content.Context
+import android.support.v7.widget.helper.ItemTouchHelper
 import com.jarklee.androidsupport.adapter.BaseRecyclerViewAdapter
 import com.jarklee.androidsupport.exception.RangeException
 import java.util.*
 
 abstract class ArrayRecyclerAdapter<VH, DATA>(context: Context?)
-: BaseRecyclerViewAdapter<VH, DATA>(context)
+    : BaseRecyclerViewAdapter<VH, DATA>(context)
 where VH : BaseRecyclerViewAdapter.BaseViewHolder<DATA> {
 
     private val mData = ArrayList<DATA>()
@@ -46,15 +47,11 @@ where VH : BaseRecyclerViewAdapter.BaseViewHolder<DATA> {
         notifyItemRangeRemoved(0, count)
     }
 
-    fun <T : MutableList<DATA>> getData(des: T): T {
+    fun getData(): MutableList<DATA> {
+        val des = ArrayList<DATA>(mData.size)
         Collections.copy(des, mData)
         return des
     }
-
-    val data: MutableList<DATA>
-        get() {
-            return getData<MutableList<DATA>>(ArrayList<DATA>(itemCount))
-        }
 
     val dataByReference: MutableList<DATA>
         get() = mData
@@ -74,4 +71,6 @@ where VH : BaseRecyclerViewAdapter.BaseViewHolder<DATA> {
         }
         return mData[position]
     }
+
+
 }
