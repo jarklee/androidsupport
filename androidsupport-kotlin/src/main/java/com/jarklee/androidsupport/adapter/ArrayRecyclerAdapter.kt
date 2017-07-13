@@ -14,7 +14,7 @@ import com.jarklee.androidsupport.exception.RangeException
 import java.util.*
 
 abstract class ArrayRecyclerAdapter<VH, DATA>(context: Context?)
-    : BaseRecyclerViewAdapter<VH, DATA>(context)
+    : BaseRecyclerViewAdapter<VH, DATA>(context), ItemTouchHelperAdapter
 where VH : BaseRecyclerViewAdapter.BaseViewHolder<DATA> {
 
     private val mData = ArrayList<DATA>()
@@ -47,10 +47,15 @@ where VH : BaseRecyclerViewAdapter.BaseViewHolder<DATA> {
         notifyItemRangeRemoved(0, count)
     }
 
-    fun getData(): MutableList<DATA> {
+    open fun getData(): MutableList<DATA> {
         val des = ArrayList<DATA>(mData.size)
         Collections.copy(des, mData)
         return des
+    }
+
+    open fun remove(position: Int) {
+        dataByReference.removeAt(position)
+        notifyItemRemoved(position)
     }
 
     val dataByReference: MutableList<DATA>
@@ -72,5 +77,28 @@ where VH : BaseRecyclerViewAdapter.BaseViewHolder<DATA> {
         return mData[position]
     }
 
+    override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
+        if (fromPosition < toPosition) {
+            for (i in fromPosition..toPosition - 1) {
+                Collections.swap(mData, i, i + 1)
+            }
+        } else {
+            for (i in fromPosition downTo toPosition + 1) {
+                Collections.swap(mData, i, i - 1)
+            }
+        }
+        notifyItemMoved(fromPosition, toPosition)
+        return true
+    }
 
+    override fun onItemDismiss(position: Int) {
+        remove(position)
+    }
+}
+
+interface ItemTouchHelperAdapter {
+
+    fun onItemMove(fromPosition: Int, toPosition: Int): Boolean
+
+    fun onItemDismiss(position: Int)
 }
