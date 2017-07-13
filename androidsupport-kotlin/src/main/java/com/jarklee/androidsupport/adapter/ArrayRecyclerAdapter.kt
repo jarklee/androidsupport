@@ -8,6 +8,7 @@
 package com.jarklee.androidsupport.adapter
 
 import android.content.Context
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import com.jarklee.androidsupport.adapter.BaseRecyclerViewAdapter
 import com.jarklee.androidsupport.exception.RangeException
@@ -101,4 +102,36 @@ interface ItemTouchHelperAdapter {
     fun onItemMove(fromPosition: Int, toPosition: Int): Boolean
 
     fun onItemDismiss(position: Int)
+}
+
+data class TouchHelperConfigs(val canDrag: Boolean, val canSwipe: Boolean)
+
+class RecyclerViewTouchCallback(val adapter: ItemTouchHelperAdapter,
+                                val touchConfig: TouchHelperConfigs = TouchHelperConfigs(true, true))
+    : ItemTouchHelper.Callback() {
+
+
+    override fun isLongPressDragEnabled(): Boolean {
+        return touchConfig.canDrag
+    }
+
+    override fun isItemViewSwipeEnabled(): Boolean {
+        return touchConfig.canSwipe
+    }
+
+    override fun getMovementFlags(recyclerView: RecyclerView?, viewHolder: RecyclerView.ViewHolder?): Int {
+        val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
+        val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
+        return ItemTouchHelper.Callback.makeMovementFlags(dragFlags, swipeFlags)
+    }
+
+    override fun onMove(recyclerView: RecyclerView,
+                        viewHolder: RecyclerView.ViewHolder,
+                        target: RecyclerView.ViewHolder): Boolean {
+        return adapter.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
+    }
+
+    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+        adapter.onItemDismiss(viewHolder.adapterPosition)
+    }
 }
