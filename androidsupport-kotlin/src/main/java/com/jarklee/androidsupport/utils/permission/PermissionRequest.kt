@@ -8,16 +8,16 @@
 
 package com.jarklee.androidsupport.utils.permission
 
-internal class PermissionRequest private constructor(private val mActionOnGranted: Runnable?,
-                                                     private val mActionOnCanceled: Runnable?,
+internal class PermissionRequest private constructor(private val mActionOnGranted: PermissionActionCallback?,
+                                                     private val mActionOnCanceled: PermissionActionCallback?,
                                                      private val mIsRequireAll: Boolean) {
 
     fun executeAction() {
-        mActionOnGranted?.run()
+        mActionOnGranted?.invoke()
     }
 
     fun executeCancel() {
-        mActionOnCanceled?.run()
+        mActionOnCanceled?.invoke()
     }
 
     fun requireAll(): Boolean {
@@ -26,18 +26,18 @@ internal class PermissionRequest private constructor(private val mActionOnGrante
 
     companion object {
 
-        fun newGrantOnly(actionOnGranted: Runnable?,
+        fun newGrantOnly(actionOnGranted: PermissionActionCallback?,
                          requireAll: Boolean): PermissionRequest {
             return PermissionRequest(actionOnGranted, null, requireAll)
         }
 
-        fun newCancelOnly(actionOnCanceled: Runnable?,
+        fun newCancelOnly(actionOnCanceled: PermissionActionCallback?,
                           requireAll: Boolean): PermissionRequest {
             return PermissionRequest(null, actionOnCanceled, requireAll)
         }
 
-        fun newRequest(actionOnGranted: Runnable?,
-                       actionOnCanceled: Runnable?,
+        fun newRequest(actionOnGranted: PermissionActionCallback?,
+                       actionOnCanceled: PermissionActionCallback?,
                        requireAll: Boolean): PermissionRequest {
             return PermissionRequest(actionOnGranted, actionOnCanceled, requireAll)
         }

@@ -21,26 +21,26 @@ interface PermissionsRequestQuery {
 
     fun satisfyToRequestedPermissions(): Boolean
 
-    fun executeAction(action: Runnable?,
+    fun executeAction(action: PermissionActionCallback?,
                       explainMessage: String?)
 
-    fun executeAction(action: Runnable?,
+    fun executeAction(action: PermissionActionCallback?,
                       useDefaultCancelAction: Boolean,
                       explainMessage: String?)
 
-    fun executeAction(action: Runnable?,
-                      cancelAction: Runnable?,
+    fun executeAction(action: PermissionActionCallback?,
+                      cancelAction: PermissionActionCallback?,
                       explainMessage: String?)
 
-    fun executeAction(action: Runnable?,
-                      cancelAction: Runnable?,
+    fun executeAction(action: PermissionActionCallback?,
+                      cancelAction: PermissionActionCallback?,
                       useDefaultCancelAction: Boolean,
                       explainMessage: String?)
 
-    fun checkAndRequest(cancelAction: Runnable?,
+    fun checkAndRequest(cancelAction: PermissionActionCallback?,
                         explainMessage: String?)
 
-    fun checkAndRequest(cancelAction: Runnable?,
+    fun checkAndRequest(cancelAction: PermissionActionCallback?,
                         useDefaultCancelAction: Boolean,
                         explainMessage: String?)
 }
@@ -75,42 +75,42 @@ internal abstract class PermissionsRequestBaseQuery(val mRequestManager: Permiss
         }
     }
 
-    override fun executeAction(action: Runnable?,
+    override fun executeAction(action: PermissionActionCallback?,
                                explainMessage: String?) {
         executeAction(action, false, explainMessage)
     }
 
-    override fun executeAction(action: Runnable?,
+    override fun executeAction(action: PermissionActionCallback?,
                                useDefaultCancelAction: Boolean,
                                explainMessage: String?) {
         executeAction(action, null, useDefaultCancelAction, explainMessage)
     }
 
-    override fun executeAction(action: Runnable?,
-                               cancelAction: Runnable?,
+    override fun executeAction(action: PermissionActionCallback?,
+                               cancelAction: PermissionActionCallback?,
                                explainMessage: String?) {
         executeAction(action, cancelAction, false, explainMessage)
     }
 
-    override fun executeAction(action: Runnable?,
-                               cancelAction: Runnable?,
+    override fun executeAction(action: PermissionActionCallback?,
+                               cancelAction: PermissionActionCallback?,
                                useDefaultCancelAction: Boolean,
                                explainMessage: String?) {
         val permissionRequester = this.mRequestManager.permissionRequester
         val requirePermissions = mListPermissions?.toTypedArray()
         if (requirePermissions == null) {
-            action?.run()
+            action?.invoke()
             return
         }
         if (satisfyToRequestedPermissions()) {
-            action?.run()
+            action?.invoke()
             return
         }
         if (!permissionRequester.shouldRequestPermissions()) {
             if (cancelAction != null) {
-                cancelAction.run()
+                cancelAction.invoke()
             } else if (useDefaultCancelAction && mRequestManager.defaultCancelAction != null) {
-                mRequestManager.defaultCancelAction.run()
+                mRequestManager.defaultCancelAction.invoke()
             }
             return
         }
@@ -132,12 +132,12 @@ internal abstract class PermissionsRequestBaseQuery(val mRequestManager: Permiss
         permissionRequester.requestPermissions(requestId, *requirePermissions)
     }
 
-    override fun checkAndRequest(cancelAction: Runnable?,
+    override fun checkAndRequest(cancelAction: PermissionActionCallback?,
                                  explainMessage: String?) {
         checkAndRequest(cancelAction, false, explainMessage)
     }
 
-    override fun checkAndRequest(cancelAction: Runnable?,
+    override fun checkAndRequest(cancelAction: PermissionActionCallback?,
                                  useDefaultCancelAction: Boolean,
                                  explainMessage: String?) {
         val permissionRequester = this.mRequestManager.permissionRequester
@@ -147,9 +147,9 @@ internal abstract class PermissionsRequestBaseQuery(val mRequestManager: Permiss
         }
         if (!permissionRequester.shouldRequestPermissions()) {
             if (cancelAction != null) {
-                cancelAction.run()
+                cancelAction.invoke()
             } else if (useDefaultCancelAction && mRequestManager.defaultCancelAction != null) {
-                mRequestManager.defaultCancelAction.run()
+                mRequestManager.defaultCancelAction.invoke()
             }
             return
         }

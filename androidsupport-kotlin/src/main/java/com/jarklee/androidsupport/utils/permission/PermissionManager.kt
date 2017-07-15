@@ -34,7 +34,7 @@ internal fun getPermissionRequester(context: Context): IPermissionRequester {
 }
 
 class PermissionManager private constructor(internal val permissionRequester: IPermissionRequester,
-                                            internal val defaultCancelAction: Runnable?) {
+                                            internal val defaultCancelAction: PermissionActionCallback?) {
 
     private val mPermissionRequests: MutableMap<Int, PermissionRequest>
 
@@ -48,17 +48,17 @@ class PermissionManager private constructor(internal val permissionRequester: IP
     constructor(context: Context) : this(getPermissionRequester(context))
 
     constructor(activity: Activity,
-                defaultCancelAction: Runnable?) : this(getPermissionRequester(activity), defaultCancelAction)
+                defaultCancelAction: PermissionActionCallback?) : this(getPermissionRequester(activity), defaultCancelAction)
 
     @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     constructor(fragment: android.app.Fragment,
-                defaultCancelAction: Runnable?) : this(getPermissionRequester(fragment), defaultCancelAction)
+                defaultCancelAction: PermissionActionCallback?) : this(getPermissionRequester(fragment), defaultCancelAction)
 
     constructor(fragment: android.support.v4.app.Fragment,
-                defaultCancelAction: Runnable?) : this(getPermissionRequester(fragment), defaultCancelAction)
+                defaultCancelAction: PermissionActionCallback?) : this(getPermissionRequester(fragment), defaultCancelAction)
 
     constructor(context: Context,
-                defaultCancelAction: Runnable?) : this(getPermissionRequester(context), defaultCancelAction)
+                defaultCancelAction: PermissionActionCallback?) : this(getPermissionRequester(context), defaultCancelAction)
 
     private constructor(mPermissionRequester: IPermissionRequester) : this(mPermissionRequester, null)
 
