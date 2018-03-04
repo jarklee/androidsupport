@@ -42,7 +42,7 @@ where VH : BaseRecyclerViewAdapter.BaseViewHolder<DATA> {
         addData(datas)
     }
 
-    private fun clear() {
+    open fun clear() {
         val count = itemCount
         mData.clear()
         notifyItemRangeRemoved(0, count)

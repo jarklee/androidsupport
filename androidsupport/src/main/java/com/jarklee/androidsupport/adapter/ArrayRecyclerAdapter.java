@@ -48,7 +48,7 @@ public abstract class ArrayRecyclerAdapter<VH extends BaseRecyclerViewAdapter.Ba
         addData(datas);
     }
 
-    private void clear() {
+    public void clear() {
         int count = getItemCount();
         mData.clear();
         notifyItemRangeRemoved(0, count);
