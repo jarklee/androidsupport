@@ -29,17 +29,17 @@ where VH : BaseRecyclerViewAdapter.BaseViewHolder<DATA> {
 
     abstract fun getItemAtPosition(position: Int): DATA?
 
-    override fun onBindViewHolder(holder: VH?, position: Int) {
+    override fun onBindViewHolder(holder: VH, position: Int) {
         val data = getItemAtPosition(position)
         if (data != null) {
-            holder?.bindData(data, position)
+            holder.bindData(data, position)
         }
     }
 
-    override fun onBindViewHolder(holder: VH?, position: Int, payloads: List<Any>?) {
+    override fun onBindViewHolder(holder: VH, position: Int, payloads: List<Any>?) {
         val data = getItemAtPosition(position)
         if (data != null) {
-            holder?.bindData(data, position, payloads)
+            holder.bindData(data, position, payloads)
         }
     }
 
