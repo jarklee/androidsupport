@@ -86,7 +86,7 @@ object PermissionHelper {
             return false
         }
         val granted = permissions.any {
-            ActivityCompat.checkSelfPermission(context, it) != PackageManager.PERMISSION_GRANTED
+            ActivityCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
         }
         return granted
     }
