@@ -24,20 +24,27 @@ abstract class ArrayRecyclerAdapter<VH, DATA>(context: Context?)
         val count = itemCount
         mOriginal.add(data)
         val filter = this.filter
-        if (filter != null && filter.itemValid(data)) {
-            mFilteredData.add(data)
+        if (filter != null) {
+            if (filter.itemValid(data)) {
+                mFilteredData.add(data)
+                notifyItemInserted(count)
+            }
+        } else {
             notifyItemInserted(count)
         }
     }
 
     private fun internalAddData(data: Collection<DATA>) {
         val original = itemCount
+        var insert = data.size
         mOriginal.addAll(data)
         val filter = this.filter
         if (filter != null) {
             val filtered = data.filter(filter::itemValid)
-            val insert = filtered.size
+            insert = filtered.size
             mFilteredData.addAll(filtered)
+            notifyItemRangeInserted(original, insert)
+        } else {
             notifyItemRangeInserted(original, insert)
         }
     }
