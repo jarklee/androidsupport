@@ -36,7 +36,7 @@ where VH : BaseRecyclerViewAdapter.BaseViewHolder<DATA> {
         }
     }
 
-    override fun onBindViewHolder(holder: VH, position: Int, payloads: MutableList<Any>?) {
+    override fun onBindViewHolder(holder: VH, position: Int, payloads: MutableList<Any>) {
         val data = getItemAtPosition(position)
         if (data != null) {
             holder.bindData(data, position, payloads)

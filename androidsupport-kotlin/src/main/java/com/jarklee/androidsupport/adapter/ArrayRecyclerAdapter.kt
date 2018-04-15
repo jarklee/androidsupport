@@ -10,82 +10,97 @@ package com.jarklee.androidsupport.adapter
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
-import com.jarklee.androidsupport.adapter.BaseRecyclerViewAdapter
 import com.jarklee.androidsupport.exception.RangeException
 import java.util.*
 
 abstract class ArrayRecyclerAdapter<VH, DATA>(context: Context?)
     : BaseRecyclerViewAdapter<VH, DATA>(context), ItemTouchHelperAdapter
-where VH : BaseRecyclerViewAdapter.BaseViewHolder<DATA> {
+        where VH : BaseRecyclerViewAdapter.BaseViewHolder<DATA> {
 
-    private val mData = ArrayList<DATA>()
+    val mOriginal = ArrayList<DATA>()
+    var mFilteredData: MutableList<DATA> = mOriginal
+
+    private fun internalAddData(data: DATA) {
+        val count = itemCount
+        mOriginal.add(data)
+        val filter = this.filter
+        if (filter != null && filter.itemValid(data)) {
+            mFilteredData.add(data)
+            notifyItemInserted(count)
+        }
+    }
+
+    private fun internalAddData(data: Collection<DATA>) {
+        val original = itemCount
+        mOriginal.addAll(data)
+        val filter = this.filter
+        if (filter != null) {
+            val filtered = data.filter(filter::itemValid)
+            val insert = filtered.size
+            mFilteredData.addAll(filtered)
+            notifyItemRangeInserted(original, insert)
+        }
+    }
+
+    private fun internalClear() {
+        val count = itemCount
+        mOriginal.clear()
+        mFilteredData.clear()
+        notifyItemRangeRemoved(0, count)
+    }
 
     open fun addData(data: DATA) {
-        val count = itemCount
-        mData.add(data)
-        notifyItemInserted(count)
+        internalAddData(data)
     }
 
     open fun addData(data: Collection<DATA>) {
-        val original = itemCount
-        mData.addAll(data)
-        notifyItemRangeInserted(original, data.size)
+        internalAddData(data)
     }
 
     open fun setData(data: DATA) {
         clear()
-        addData(data)
+        internalAddData(data)
     }
 
     open fun setData(datas: Collection<DATA>) {
         clear()
-        addData(datas)
+        internalAddData(datas)
     }
 
     open fun clear() {
-        val count = itemCount
-        mData.clear()
-        notifyItemRangeRemoved(0, count)
-    }
-
-    open fun getData(): MutableList<DATA> {
-        val des = ArrayList<DATA>(mData.size)
-        Collections.copy(des, mData)
-        return des
+        internalClear()
     }
 
     open fun remove(position: Int) {
-        dataByReference.removeAt(position)
+        mFilteredData.removeAt(position)
         notifyItemRemoved(position)
     }
 
-    val dataByReference: MutableList<DATA>
-        get() = mData
-
     override fun release() {
         super.release()
-        mData.clear()
+        mOriginal.clear()
+        mFilteredData.clear()
     }
 
     override fun getItemCount(): Int {
-        return mData.size
+        return mFilteredData.size
     }
 
     override fun getItemAtPosition(position: Int): DATA? {
         if (position < 0 || position >= itemCount) {
             throw RangeException()
         }
-        return mData[position]
+        return mFilteredData[position]
     }
 
     override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
         if (fromPosition < toPosition) {
-            for (i in fromPosition..toPosition - 1) {
-                Collections.swap(mData, i, i + 1)
+            for (i in fromPosition until toPosition) {
+                Collections.swap(mFilteredData, i, i + 1)
             }
         } else {
             for (i in fromPosition downTo toPosition + 1) {
-                Collections.swap(mData, i, i - 1)
+                Collections.swap(mFilteredData, i, i - 1)
             }
         }
         notifyItemMoved(fromPosition, toPosition)
@@ -95,6 +110,26 @@ where VH : BaseRecyclerViewAdapter.BaseViewHolder<DATA> {
     override fun onItemDismiss(position: Int) {
         remove(position)
     }
+
+    private var filter: Filter<DATA>? = null
+    fun setFilter(filter: Filter<DATA>) {
+        this.filter = filter
+        performFullFilter()
+    }
+
+    fun performFullFilter() {
+        val filter = this.filter
+        if (filter == null) {
+            this.mFilteredData = mOriginal
+        } else {
+            this.mFilteredData = mOriginal.filter(filter::itemValid).toMutableList()
+        }
+        notifyDataSetChanged()
+    }
+}
+
+interface Filter<in DATA> {
+    fun itemValid(data: DATA): Boolean
 }
 
 interface ItemTouchHelperAdapter {
@@ -106,8 +141,8 @@ interface ItemTouchHelperAdapter {
 
 data class TouchHelperConfigs(val canDrag: Boolean, val canSwipe: Boolean)
 
-class RecyclerViewTouchCallback(val adapter: ItemTouchHelperAdapter,
-                                val touchConfig: TouchHelperConfigs = TouchHelperConfigs(true, true))
+class RecyclerViewTouchCallback(private val adapter: ItemTouchHelperAdapter,
+                                private val touchConfig: TouchHelperConfigs = TouchHelperConfigs(true, true))
     : ItemTouchHelper.Callback() {
 
 
