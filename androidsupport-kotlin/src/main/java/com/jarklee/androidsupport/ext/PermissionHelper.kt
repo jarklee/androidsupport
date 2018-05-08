@@ -46,20 +46,21 @@ fun Activity.requestPermissions(id: Int, vararg permission: String) {
 }
 
 fun android.support.v4.app.Fragment.requestPermissions(id: Int, vararg permission: String) {
-    PermissionHelper.request(activity, id, *permission)
+    this.requestPermissions(permission, id)
 }
 
 @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
 fun android.app.Fragment.requestPermissions(id: Int, vararg permission: String) {
-    PermissionHelper.request(activity, id, *permission)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        this.requestPermissions(permission, id)
+    }
 }
 
 fun isPermissionsGranted(grantedResults: IntArray?): Boolean {
     if (grantedResults == null) {
         return true
     }
-    val granted = grantedResults.none { it != PackageManager.PERMISSION_GRANTED }
-    return granted
+    return grantedResults.none { it != PackageManager.PERMISSION_GRANTED }
 }
 
 fun isOnePermissionsGranted(grantedResults: IntArray?): Boolean {
@@ -75,20 +76,18 @@ object PermissionHelper {
         if (context == null) {
             return false
         }
-        val granted = permissions.none {
+        return permissions.none {
             ActivityCompat.checkSelfPermission(context, it) != PackageManager.PERMISSION_GRANTED
         }
-        return granted
     }
 
     fun hasOne(context: Context?, vararg permissions: String): Boolean {
         if (context == null) {
             return false
         }
-        val granted = permissions.any {
+        return permissions.any {
             ActivityCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
         }
-        return granted
     }
 
     fun request(activity: Activity?, requestID: Int, vararg permissions: String) {
