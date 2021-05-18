@@ -9,8 +9,13 @@
 package com.jarklee.androidsupport.annotation
 
 import android.content.Context
-import android.support.annotation.IntDef
+import androidx.annotation.IntDef
 
-@IntDef(0, Context.BIND_AUTO_CREATE.toLong(), Context.BIND_DEBUG_UNBIND.toLong(), Context.BIND_NOT_FOREGROUND.toLong())
+@IntDef(
+    0,
+    Context.BIND_AUTO_CREATE,
+    Context.BIND_DEBUG_UNBIND,
+    Context.BIND_NOT_FOREGROUND
+)
 @Retention(AnnotationRetention.SOURCE)
 annotation class BindServiceFlag

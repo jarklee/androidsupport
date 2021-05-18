@@ -12,11 +12,12 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+
+import androidx.appcompat.widget.AppCompatEditText;
 
 import com.jarklee.androidsupport.R;
 import com.jarklee.androidsupport.widget.utils.OnClearableViewListener;

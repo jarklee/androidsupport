@@ -15,28 +15,32 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.support.annotation.CheckResult
-import android.support.annotation.MainThread
-import android.support.annotation.StringRes
-import android.support.annotation.UiThread
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.WindowManager
+import androidx.annotation.CheckResult
+import androidx.annotation.MainThread
+import androidx.annotation.StringRes
+import androidx.annotation.UiThread
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import com.jarklee.androidsupport.annotation.BindServiceFlag
 import com.jarklee.androidsupport.service.ServiceConnector
 
 @CheckResult
-fun Activity.bindToService(serviceClass: Class<out Service>,
-                           @BindServiceFlag flag: Int = Context.BIND_AUTO_CREATE): ServiceConnector {
+fun Activity.bindToService(
+    serviceClass: Class<out Service>,
+    @BindServiceFlag flag: Int = Context.BIND_AUTO_CREATE
+): ServiceConnector {
     val serviceConnector = ServiceConnector(this, flag)
     serviceConnector.bindService(serviceClass)
     return serviceConnector
 }
 
-fun Activity.navigateToActivity(activity: Class<out Activity>,
-                                data: Bundle? = null,
-                                flag: Int = 0) {
+fun Activity.navigateToActivity(
+    activity: Class<out Activity>,
+    data: Bundle? = null,
+    flag: Int = 0
+) {
     val intent = Intent(this, activity)
     intent.addFlags(flag)
     if (data != null) {
@@ -45,10 +49,12 @@ fun Activity.navigateToActivity(activity: Class<out Activity>,
     startActivity(intent)
 }
 
-fun Activity.navigateToActivityForResult(activity: Class<out Activity>,
-                                         data: Bundle? = null,
-                                         requestCode: Int,
-                                         flags: Int = 0) {
+fun Activity.navigateToActivityForResult(
+    activity: Class<out Activity>,
+    data: Bundle? = null,
+    requestCode: Int,
+    flags: Int = 0
+) {
     val intent = Intent(this, activity)
     intent.addFlags(flags)
     if (data != null) {
@@ -63,15 +69,30 @@ fun Activity.showAlert(title: String, message: String) {
 }
 
 fun Activity.hideAllSystemUI() {
-    window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN)
-    if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) {
+    window.setFlags(
+        WindowManager.LayoutParams.FLAG_FULLSCREEN,
+        WindowManager.LayoutParams.FLAG_FULLSCREEN
+    )
+    if (Build.VERSION.SDK_INT in 16..18) {
         window.decorView.systemUiVisibility = View.GONE
     } else if (Build.VERSION.SDK_INT >= 19) {
-        val uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        val uiOptions =
+            View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         window.decorView.systemUiVisibility = uiOptions
     }
 }
+
+val Activity.isAboutDestroying: Boolean
+    get() {
+        if (isFinishing) {
+            return true
+        }
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            isDestroyed
+        } else {
+            false
+        }
+    }
 
 abstract class AbsActivity : AppCompatActivity() {
 

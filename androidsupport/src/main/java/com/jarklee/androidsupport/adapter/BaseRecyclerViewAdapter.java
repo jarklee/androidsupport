@@ -9,9 +9,10 @@
 package com.jarklee.androidsupport.adapter;
 
 import android.content.Context;
-import android.support.annotation.CallSuper;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import androidx.annotation.CallSuper;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.jarklee.androidsupport.R;
 import com.jarklee.essential.common.Releasable;

@@ -12,8 +12,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
-import android.support.v7.app.AlertDialog;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
 
 import com.jarklee.androidsupport.R;
 import com.jarklee.essential.common.helper.PermissionHelper;
@@ -21,12 +23,12 @@ import com.jarklee.essential.common.helper.PermissionHelper;
 final class PermissionRequesterImpl implements IPermissionRequester {
     private final Activity mActivity;
     private final android.app.Fragment mFragment;
-    private final android.support.v4.app.Fragment mSupportFragment;
+    private final Fragment mSupportFragment;
     private final Context mContext;
 
     private PermissionRequesterImpl(Activity activity,
                                     android.app.Fragment fragment,
-                                    android.support.v4.app.Fragment supportFragment,
+                                    Fragment supportFragment,
                                     Context context) {
         this.mContext = context;
         this.mActivity = activity;
@@ -43,7 +45,7 @@ final class PermissionRequesterImpl implements IPermissionRequester {
         this(null, fragment, null, null);
     }
 
-    PermissionRequesterImpl(android.support.v4.app.Fragment fragment) {
+    PermissionRequesterImpl(Fragment fragment) {
         this(null, null, fragment, null);
     }
 

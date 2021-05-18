@@ -9,9 +9,10 @@
 package com.jarklee.androidsupport.widget.utils;
 
 import android.graphics.Rect;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
+
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class ListDecorator extends ItemTouchHelper {
 

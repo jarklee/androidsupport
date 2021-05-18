@@ -11,7 +11,8 @@ package com.jarklee.androidsupport.utils.permission
 import android.app.Activity
 import android.content.Context
 import android.os.Build
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
 import com.jarklee.androidsupport.ext.isOnePermissionsGranted
 import com.jarklee.androidsupport.ext.isPermissionsGranted
 import java.util.*
@@ -20,7 +21,7 @@ internal fun getPermissionRequester(activity: Activity): IPermissionRequester {
     return PermissionRequesterImpl(activity)
 }
 
-internal fun getPermissionRequester(fragment: android.support.v4.app.Fragment): IPermissionRequester {
+internal fun getPermissionRequester(fragment: Fragment): IPermissionRequester {
     return PermissionRequesterImpl(fragment)
 }
 
@@ -43,7 +44,7 @@ class PermissionManager private constructor(internal val permissionRequester: IP
     @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     constructor(fragment: android.app.Fragment) : this(getPermissionRequester(fragment))
 
-    constructor(fragment: android.support.v4.app.Fragment) : this(getPermissionRequester(fragment))
+    constructor(fragment: Fragment) : this(getPermissionRequester(fragment))
 
     constructor(context: Context) : this(getPermissionRequester(context))
 
@@ -54,7 +55,7 @@ class PermissionManager private constructor(internal val permissionRequester: IP
     constructor(fragment: android.app.Fragment,
                 defaultCancelAction: PermissionActionCallback?) : this(getPermissionRequester(fragment), defaultCancelAction)
 
-    constructor(fragment: android.support.v4.app.Fragment,
+    constructor(fragment: Fragment,
                 defaultCancelAction: PermissionActionCallback?) : this(getPermissionRequester(fragment), defaultCancelAction)
 
     constructor(context: Context,

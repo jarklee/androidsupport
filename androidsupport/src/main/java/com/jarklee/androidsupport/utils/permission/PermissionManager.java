@@ -11,9 +11,11 @@ package com.jarklee.androidsupport.utils.permission;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
 
 import com.jarklee.essential.common.helper.PermissionHelper;
 
@@ -36,7 +38,7 @@ public final class PermissionManager {
         this(PermissionRequesterFactory.create(fragment));
     }
 
-    public PermissionManager(@NonNull android.support.v4.app.Fragment fragment) {
+    public PermissionManager(@NonNull Fragment fragment) {
         this(PermissionRequesterFactory.create(fragment));
     }
 
@@ -55,7 +57,7 @@ public final class PermissionManager {
         this(PermissionRequesterFactory.create(fragment), defaultCancelAction);
     }
 
-    public PermissionManager(@NonNull android.support.v4.app.Fragment fragment,
+    public PermissionManager(@NonNull Fragment fragment,
                              @Nullable Runnable defaultCancelAction) {
         this(PermissionRequesterFactory.create(fragment), defaultCancelAction);
     }

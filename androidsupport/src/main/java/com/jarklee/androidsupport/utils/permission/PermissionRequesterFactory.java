@@ -11,7 +11,9 @@ package com.jarklee.androidsupport.utils.permission;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
+
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
 
 final class PermissionRequesterFactory {
 
@@ -22,7 +24,7 @@ final class PermissionRequesterFactory {
         return new PermissionRequesterImpl(activity);
     }
 
-    static IPermissionRequester create(android.support.v4.app.Fragment fragment) {
+    static IPermissionRequester create(Fragment fragment) {
         return new PermissionRequesterImpl(fragment);
     }
 

@@ -12,14 +12,15 @@ import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
-import android.support.annotation.RequiresApi
-import android.support.v4.app.ActivityCompat
+import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
 
 fun Context.hasPermissions(vararg permission: String): Boolean {
     return PermissionHelper.has(this, *permission)
 }
 
-fun android.support.v4.app.Fragment.hasPermissions(vararg permission: String): Boolean {
+fun Fragment.hasPermissions(vararg permission: String): Boolean {
     return PermissionHelper.has(context, *permission)
 }
 
@@ -32,7 +33,7 @@ fun Context.hasOnePermissions(vararg permission: String): Boolean {
     return PermissionHelper.hasOne(this, *permission)
 }
 
-fun android.support.v4.app.Fragment.hasOnePermissions(vararg permission: String): Boolean {
+fun Fragment.hasOnePermissions(vararg permission: String): Boolean {
     return PermissionHelper.hasOne(context, *permission)
 }
 
@@ -45,7 +46,7 @@ fun Activity.requestPermissions(id: Int, vararg permission: String) {
     PermissionHelper.request(this, id, *permission)
 }
 
-fun android.support.v4.app.Fragment.requestPermissions(id: Int, vararg permission: String) {
+fun Fragment.requestPermissions(id: Int, vararg permission: String) {
     this.requestPermissions(permission, id)
 }
 

@@ -16,43 +16,49 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.support.annotation.CheckResult
-import android.support.annotation.MainThread
-import android.support.annotation.StringRes
-import android.support.annotation.UiThread
-import android.support.v4.app.Fragment
-import android.support.v7.app.AlertDialog
+import androidx.annotation.CheckResult
+import androidx.annotation.MainThread
+import androidx.annotation.StringRes
+import androidx.annotation.UiThread
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
+import com.jarklee.androidsupport.activity.isAboutDestroying
 
 import com.jarklee.androidsupport.annotation.BindServiceFlag
 import com.jarklee.androidsupport.service.ServiceConnector
 
 @CheckResult
-fun Fragment.bindToService(serviceClass: Class<out Service>,
-                           @BindServiceFlag flag: Int = Context.BIND_AUTO_CREATE): ServiceConnector {
+fun Fragment.bindToService(
+    serviceClass: Class<out Service>,
+    @BindServiceFlag flag: Int = Context.BIND_AUTO_CREATE
+): ServiceConnector? {
+    val context = context ?: return null
     val serviceConnector = ServiceConnector(context, flag)
     serviceConnector.bindService(serviceClass)
     return serviceConnector
 }
 
 fun Fragment.sendBroadcast(intent: Intent) {
-    activity.sendBroadcast(intent)
+    activity?.sendBroadcast(intent)
 }
 
 fun Fragment.registerBroadcast(receiver: BroadcastReceiver, filter: IntentFilter) {
-    activity.registerReceiver(receiver, filter)
+    activity?.registerReceiver(receiver, filter)
 }
 
 fun Fragment.unregisterReceiver(receiver: BroadcastReceiver) {
     try {
-        activity.unregisterReceiver(receiver)
+        activity?.unregisterReceiver(receiver)
     } catch (e: Exception) {
         e.printStackTrace()
     }
 }
 
-fun Fragment.navigateToActivity(activityClass: Class<out Activity>,
-                                bundle: Bundle? = null,
-                                flag: Int = 0) {
+fun Fragment.navigateToActivity(
+    activityClass: Class<out Activity>,
+    bundle: Bundle? = null,
+    flag: Int = 0
+) {
     val intent = Intent(activity, activityClass)
     intent.addFlags(flag)
     if (bundle != null) {
@@ -61,10 +67,12 @@ fun Fragment.navigateToActivity(activityClass: Class<out Activity>,
     startActivity(intent)
 }
 
-fun Fragment.navigateToActivityForResult(activityClass: Class<out Activity>,
-                                         bundle: Bundle? = null,
-                                         requestCode: Int,
-                                         flags: Int = 0) {
+fun Fragment.navigateToActivityForResult(
+    activityClass: Class<out Activity>,
+    bundle: Bundle? = null,
+    requestCode: Int,
+    flags: Int = 0
+) {
     val intent = Intent(activity, activityClass)
     intent.addFlags(flags)
     if (bundle != null) {
@@ -102,6 +110,10 @@ abstract class AbsFragment : Fragment() {
     @UiThread
     @MainThread
     protected fun hideProgress() {
+        val activity = activity ?: return
+        if (activity.isAboutDestroying) {
+            return
+        }
         mProgressDialog?.dismiss()
     }
 }

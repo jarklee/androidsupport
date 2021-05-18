@@ -11,7 +11,7 @@ package com.jarklee.androidsupport.lifecycle
 import android.annotation.TargetApi
 import android.app.Activity
 import android.os.Build
-import android.support.v4.app.FragmentActivity
+import androidx.fragment.app.FragmentActivity
 import com.jarklee.androidsupport.callback.LifeCycleListener
 
 object LifeCycleHelper {
@@ -36,7 +36,8 @@ object LifeCycleHelper {
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private fun attachHoneyComb(activity: FragmentActivity, listener: LifeCycleListener) {
         val manager = activity.fragmentManager
-        var fragment: HeadlessFragment? = manager.findFragmentByTag(LIFE_CYCLE_TAG) as HeadlessFragment
+        var fragment: HeadlessFragment? =
+            manager.findFragmentByTag(LIFE_CYCLE_TAG) as HeadlessFragment
         if (fragment != null) {
             fragment.addListener(listener)
         } else {
@@ -47,7 +48,8 @@ object LifeCycleHelper {
 
     private fun attachGingerBread(activity: FragmentActivity, listener: LifeCycleListener) {
         val manager = activity.supportFragmentManager
-        var fragment: HeadlessFragmentCompat? = manager.findFragmentByTag(LIFE_CYCLE_TAG) as HeadlessFragmentCompat
+        var fragment: HeadlessFragmentCompat? =
+            manager.findFragmentByTag(LIFE_CYCLE_TAG) as HeadlessFragmentCompat
         if (fragment != null) {
             fragment.addListener(listener)
         } else {

@@ -11,7 +11,9 @@ package com.jarklee.androidsupport.lifecycle;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
-import android.support.v4.app.FragmentActivity;
+
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.jarklee.androidsupport.callback.LifeCycleListener;
 
@@ -50,7 +52,7 @@ public class LifeCycleHelper {
 
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     private static void attachGingerBread(FragmentActivity activity, LifeCycleListener listener) {
-        android.support.v4.app.FragmentManager manager = activity.getSupportFragmentManager();
+        FragmentManager manager = activity.getSupportFragmentManager();
         HeadlessFragmentCompat fragment = (HeadlessFragmentCompat) manager.findFragmentByTag(LIFE_CYCLE_TAG);
         if (fragment != null) {
             fragment.addListener(listener);

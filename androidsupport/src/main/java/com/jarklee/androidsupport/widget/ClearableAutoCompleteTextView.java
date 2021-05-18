@@ -12,11 +12,12 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 
 import com.jarklee.androidsupport.R;
 import com.jarklee.androidsupport.widget.utils.OnClearableViewListener;
@@ -39,7 +40,7 @@ public class ClearableAutoCompleteTextView extends AppCompatAutoCompleteTextView
     }
 
     public ClearableAutoCompleteTextView(Context context, AttributeSet attrs) {
-        this(context, attrs, android.support.v7.appcompat.R.attr.autoCompleteTextViewStyle);
+        this(context, attrs, android.R.attr.autoCompleteTextViewStyle);
     }
 
     public ClearableAutoCompleteTextView(Context context, AttributeSet attrs, int defStyleAttr) {

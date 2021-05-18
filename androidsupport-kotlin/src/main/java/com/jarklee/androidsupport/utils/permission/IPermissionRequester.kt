@@ -11,8 +11,9 @@ package com.jarklee.androidsupport.utils.permission
 import android.app.Activity
 import android.content.Context
 import android.os.Build
-import android.support.annotation.RequiresApi
-import android.support.v7.app.AlertDialog
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import com.jarklee.androidsupport.R
 import com.jarklee.androidsupport.ext.*
 
@@ -36,7 +37,7 @@ internal interface IPermissionRequester {
 
 internal class PermissionRequesterImpl internal constructor(private val mActivity: Activity?,
                                                             private val mFragment: android.app.Fragment?,
-                                                            private val mSupportFragment: android.support.v4.app.Fragment?,
+                                                            private val mSupportFragment: Fragment?,
                                                             private val mContext: Context?) : IPermissionRequester {
 
     constructor(activity: Activity) : this(activity, null, null, null)
@@ -44,7 +45,7 @@ internal class PermissionRequesterImpl internal constructor(private val mActivit
     @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
     constructor(fragment: android.app.Fragment) : this(null, fragment, null, null)
 
-    constructor(fragment: android.support.v4.app.Fragment) : this(null, null, fragment, null)
+    constructor(fragment: Fragment) : this(null, null, fragment, null)
 
     constructor(context: Context) : this(null, null, null, context)
 
@@ -137,10 +138,10 @@ internal class PermissionRequesterImpl internal constructor(private val mActivit
         get() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 return mActivity ?: if (mFragment == null)
-                    mSupportFragment!!.context
+                    mSupportFragment!!.requireContext()
                 else
                     mFragment.activity
             }
-            return mActivity ?: mSupportFragment!!.context
+            return mActivity ?: mSupportFragment!!.requireContext()
         }
 }

@@ -7,23 +7,24 @@
  */
 
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'maven-publish'
 
-group='com.github.jarklee'
+def groupName = 'com.github.jarklee'
+def artifactName = 'androidsupport'
+def tagVersion = "1.1.0"
+group = groupName
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 30
+    buildToolsVersion '29.0.2'
 
     defaultConfig {
-        minSdkVersion 9
-        targetSdkVersion 24
+        minSdkVersion 14
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -32,30 +33,29 @@ android {
     }
 }
 
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = groupName
+                artifactId = artifactName
+                version = "$tagVersion"
+            }
+            debug(MavenPublication) {
+                from components.debug
+                groupId = groupName
+                artifactId = artifactName
+                version = "$tagVersion"
+            }
+        }
+    }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:24.2.1'
-    compile 'com.android.support:recyclerview-v7:24.2.1'
+    implementation 'androidx.annotation:annotation:1.2.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.recyclerview:recyclerview:1.2.0'
     compile 'com.github.jarklee:essential:1.0.7'
-}
-
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-
-task javadoc(type: Javadoc) {
-    failOnError  false
-    source = android.sourceSets.main.java.sourceFiles
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.getDestinationDir()
-}
-
-artifacts {
-    archives sourcesJar
-    archives javadocJar
 }

@@ -17,7 +17,7 @@ fun Context.getCachedFolder(): File {
     if (cachedFolder == null) {
         cachedFolder = this.cacheDir
     }
-    return cachedFolder
+    return cachedFolder!!
 }
 
 fun Context.getAppFolder(): File {
@@ -25,7 +25,7 @@ fun Context.getAppFolder(): File {
     if (appFolder == null) {
         appFolder = this.filesDir
     }
-    return appFolder
+    return appFolder!!
 }
 
 fun Context.randomTempFile(): File {
